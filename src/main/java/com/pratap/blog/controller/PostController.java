@@ -11,8 +11,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,5 +49,27 @@ public class PostController {
         log.info("Executing getAllPost()...");
         List<PostDto> postsDto = postService.getPosts();
         return new ResponseEntity<>(postsDto.stream().map(postDto -> modelMapper.map(postDto, PostResponseModel.class)).toList(), HttpStatus.OK);
+    }
+
+    @GetMapping("/posts/{postId}")
+    public ResponseEntity<PostResponseModel> getPostByPostId(@PathVariable("postId") String postId) throws Exception {
+        log.info("Executing getPostById() by id={}", postId);
+        PostDto postDto = postService.getPostByPostId(postId);
+        return new ResponseEntity<>(modelMapper.map(postDto, PostResponseModel.class), HttpStatus.FOUND);
+    }
+
+    @PutMapping("/posts/{postId}")
+    public ResponseEntity<PostResponseModel> updatePostByPostId(@RequestBody PostRequestModel postRequestModel, @PathVariable("postId") String postId) throws Exception {
+        log.info("Executing updatePostByPostId() by Payload={} and postId={}",
+                jsonMapper.writeValueAsString(postRequestModel), postId);
+
+        PostDto postDto = postService.updatePostByPostId(modelMapper.map(postRequestModel, PostDto.class), postId);
+        return new ResponseEntity<>(modelMapper.map(postDto, PostResponseModel.class), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/posts/{postId}")
+    public ResponseEntity<String> deletePostByPostId(@PathVariable("postId") String postId) throws Exception {
+        postService.deletePostByPostId(postId);
+        return new ResponseEntity<>("Post entity deleted successfully", HttpStatus.OK);
     }
 }
