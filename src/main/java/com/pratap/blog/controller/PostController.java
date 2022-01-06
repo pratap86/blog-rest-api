@@ -1,10 +1,11 @@
 package com.pratap.blog.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pratap.blog.constant.AppConstant;
 import com.pratap.blog.dto.PostDto;
-import com.pratap.blog.model.PostRequestModel;
-import com.pratap.blog.model.PostResponseModel;
+import com.pratap.blog.exception.model.PostPageableResponseModel;
+import com.pratap.blog.exception.model.PostRequestModel;
+import com.pratap.blog.exception.model.PostResponseModel;
 import com.pratap.blog.service.PostService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -17,9 +18,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -44,11 +44,13 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<List<PostResponseModel>> getAllPost() throws Exception{
+    public ResponseEntity<PostPageableResponseModel> getAllPost(@RequestParam(value = "pageNo", defaultValue = AppConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+                                                                @RequestParam(value = "pageSize", defaultValue = AppConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+                                                                @RequestParam(value = "sortBy", defaultValue = AppConstant.DEFAULT_SORT_BY, required = false) String sortBy,
+                                                                @RequestParam(value = "sortDir", defaultValue = AppConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir) throws Exception {
 
         log.info("Executing getAllPost()...");
-        List<PostDto> postsDto = postService.getPosts();
-        return new ResponseEntity<>(postsDto.stream().map(postDto -> modelMapper.map(postDto, PostResponseModel.class)).toList(), HttpStatus.OK);
+        return new ResponseEntity<>(postService.getPosts(pageNo, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
 
     @GetMapping("/posts/{postId}")
