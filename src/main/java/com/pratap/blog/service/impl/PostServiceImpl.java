@@ -5,16 +5,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pratap.blog.dto.PostDto;
 import com.pratap.blog.entity.Post;
 import com.pratap.blog.exception.ResourceNotFoundException;
+import com.pratap.blog.exception.model.PostPageableResponseModel;
+import com.pratap.blog.exception.model.PostResponseModel;
 import com.pratap.blog.repository.PostRepository;
 import com.pratap.blog.service.PostService;
 import com.pratap.blog.utils.IdGeneratorUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -39,12 +43,29 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getPosts() throws Exception {
+    public PostPageableResponseModel getPosts(int pageNo, int pageSize, String sortBy, String sortDir) throws Exception {
         log.info("Executing getPosts()...");
 
-        List<Post> savedPosts = postRepository.findAll();
-        log.info("Fetched all posts={}", jsonMapper.writeValueAsString(savedPosts));
-        return savedPosts.stream().map(post -> modelMapper.map(post, PostDto.class)).toList();
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        PageRequest pageRequest = PageRequest.of(pageNo, pageSize, sort);
+        Page<Post> page = postRepository.findAll(pageRequest);
+
+        // Get content from page
+        List<Post> pageContent = page.getContent();
+
+        List<PostResponseModel> postResponseModels = pageContent.stream().map(post -> modelMapper.map(post, PostResponseModel.class)).toList();
+        PostPageableResponseModel postPageableResponseModel = new PostPageableResponseModel();
+        postPageableResponseModel.setPostResponseModels(postResponseModels);
+
+        postPageableResponseModel.setPageNo(page.getNumber());
+        postPageableResponseModel.setPageSize(page.getSize());
+        postPageableResponseModel.setTotalElements(page.getTotalElements());
+        postPageableResponseModel.setTotalPages(page.getTotalPages());
+        postPageableResponseModel.setLast(page.isLast());
+        log.info("Fetched all posts={}", jsonMapper.writeValueAsString(postPageableResponseModel));
+        return postPageableResponseModel;
     }
 
     @Override

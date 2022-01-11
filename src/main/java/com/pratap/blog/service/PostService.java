@@ -1,14 +1,13 @@
 package com.pratap.blog.service;
 
 import com.pratap.blog.dto.PostDto;
-
-import java.util.List;
+import com.pratap.blog.exception.model.PostPageableResponseModel;
 
 public interface PostService {
 
     PostDto createPost(PostDto postDto) throws Exception;
 
-    List<PostDto> getPosts() throws Exception;
+    PostPageableResponseModel getPosts(int pageNo, int pageSize, String sortBy, String sortDir) throws Exception;
 
     PostDto getPostByPostId(String id) throws Exception;
 
