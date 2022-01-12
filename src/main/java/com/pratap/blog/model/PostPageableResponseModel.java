@@ -1,4 +1,4 @@
-package com.pratap.blog.exception.model;
+package com.pratap.blog.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
