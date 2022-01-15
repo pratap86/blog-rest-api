@@ -50,6 +50,8 @@ public class CommentServiceImpl implements CommentService {
 
         log.info("Executing getCommentsByPostId() with postId={}", postId);
         List<Comment> comments = commentRepository.fetchCommentsByPostId(postId);
+        if (comments.size() == 0)
+            throw new ResourceNotFoundException("Comment", "postId", postId);
         return comments.stream().map(comment -> modelMapper.map(comment, CommentDto.class)).toList();
     }
 

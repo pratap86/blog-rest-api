@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @Slf4j
 public class PostController {
@@ -35,7 +37,7 @@ public class PostController {
     private ObjectMapper jsonMapper;
 
     @PostMapping("/posts")
-    public ResponseEntity<PostResponseModel> createPost(@RequestBody PostRequestModel postRequestModel) throws Exception {
+    public ResponseEntity<PostResponseModel> createPost(@Valid @RequestBody PostRequestModel postRequestModel) throws Exception {
 
         log.info("Executing createPost() with payload={}", jsonMapper.writeValueAsString(postRequestModel));
         PostDto postDto = modelMapper.map(postRequestModel, PostDto.class);
