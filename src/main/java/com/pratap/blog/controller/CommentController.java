@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -29,7 +30,7 @@ public class CommentController {
 
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<CommentResponseModel> createComment(@PathVariable("postId") String postId,
-                                                              @RequestBody CommentRequestModel commentRequestModel) throws Exception {
+                                                              @Valid @RequestBody CommentRequestModel commentRequestModel) throws Exception {
         CommentDto commentDto = modelMapper.map(commentRequestModel, CommentDto.class);
         CommentDto serviceComment = commentService.createComment(postId, commentDto);
         return new ResponseEntity<>(modelMapper.map(serviceComment, CommentResponseModel.class), HttpStatus.OK);
