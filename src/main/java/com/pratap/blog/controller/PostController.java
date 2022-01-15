@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,7 @@ public class PostController {
     @Autowired
     private ObjectMapper jsonMapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/posts")
     public ResponseEntity<PostResponseModel> createPost(@Valid @RequestBody PostRequestModel postRequestModel) throws Exception {
 
@@ -62,6 +64,7 @@ public class PostController {
         return new ResponseEntity<>(modelMapper.map(postDto, PostResponseModel.class), HttpStatus.FOUND);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/posts/{postId}")
     public ResponseEntity<PostResponseModel> updatePostByPostId(@RequestBody PostRequestModel postRequestModel, @PathVariable("postId") String postId) throws Exception {
         log.info("Executing updatePostByPostId() by Payload={} and postId={}",
@@ -71,6 +74,7 @@ public class PostController {
         return new ResponseEntity<>(modelMapper.map(postDto, PostResponseModel.class), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/posts/{postId}")
     public ResponseEntity<String> deletePostByPostId(@PathVariable("postId") String postId) throws Exception {
         postService.deletePostByPostId(postId);
