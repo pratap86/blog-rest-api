@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ public class CommentController {
     @Autowired
     private ModelMapper modelMapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<CommentResponseModel> createComment(@PathVariable("postId") String postId,
                                                               @Valid @RequestBody CommentRequestModel commentRequestModel) throws Exception {
@@ -52,6 +54,7 @@ public class CommentController {
                 HttpStatus.FOUND);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/posts/{postId}/comments/{commentId}")
     public ResponseEntity<CommentResponseModel> updateComment(@PathVariable("postId") String postId,
                                                               @PathVariable("commentId") String commentId,
@@ -61,6 +64,7 @@ public class CommentController {
                 modelMapper.map(commentRequestModel, CommentDto.class)), CommentResponseModel.class), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/posts/{postId}/comments/{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable("postId") String postId,
                                                 @PathVariable("commentId") String commentId){

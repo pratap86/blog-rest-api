@@ -16,3 +16,9 @@ server:
   servlet:
     context-path: /blog-api
   port: 8090
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
