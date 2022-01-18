@@ -2,10 +2,12 @@ package com.pratap.blog.controller;
 
 import com.pratap.blog.entity.Role;
 import com.pratap.blog.entity.User;
+import com.pratap.blog.model.JWTAuthResponse;
 import com.pratap.blog.model.SignInRequestModel;
 import com.pratap.blog.model.SignUpRequestModel;
 import com.pratap.blog.repository.RoleRepository;
 import com.pratap.blog.repository.UserRepository;
+import com.pratap.blog.security.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +47,11 @@ public class AuthController {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     @PostMapping("/sign-in")
-    public ResponseEntity<String> authenticateUser(@Valid @RequestBody SignInRequestModel signInRequestModel){
+    public ResponseEntity<JWTAuthResponse> authenticateUser(@Valid @RequestBody SignInRequestModel signInRequestModel){
 
         log.info("Executing authenticateUser() with usernameOrEmail={}", signInRequestModel.getUsernameOrEmail());
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -54,7 +59,9 @@ public class AuthController {
                 signInRequestModel.getPassword()
         ));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("User sign-in successfully", HttpStatus.OK);
+
+        String jwtToken = jwtTokenProvider.generateJwtToken(authentication);
+        return new ResponseEntity<>(new JWTAuthResponse(jwtToken), HttpStatus.OK);
     }
 
     @PostMapping("/sign-up")
