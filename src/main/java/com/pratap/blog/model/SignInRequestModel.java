@@ -7,7 +7,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Setter
-public class LoginRequestModel {
+public class SignInRequestModel {
 
     @NotEmpty(message = "usernameOrEmail should be valid")
     private String usernameOrEmail;
