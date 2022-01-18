@@ -29,3 +29,18 @@
 ``` ruby
 logging.level.org.springframework.security = DEBUG
 ```
+
+### JWT
+
+- Best way to communicate securely between client and server
+- Follows stateless authentication mechanism
+- We should go with JWT when;
+  - Authorization
+  - Information Exchange
+
+#### JWT Structure
+
+- JWT consist of three parts separated by dot, eg: xxxx.yyyy.zzzz
+  - Header
+  - Payload
+  - Signature
