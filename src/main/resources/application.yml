@@ -20,3 +20,7 @@ logging:
     org:
       springframework:
         security: DEBUG
+
+app:
+  jwt-secret: JWTSecretKey
+  jwt-expiration-milliseconds: 684800000 # ie 7-days
