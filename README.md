@@ -44,3 +44,13 @@ logging.level.org.springframework.security = DEBUG
   - Header
   - Payload
   - Signature
+
+### Versioning REST APIs
+
+- API versioning is the practice of transparently managing changes to your API, there are four ways of versioning a REST API through;
+    - URI path
+    - query parameter
+    - custom headers
+    - content negotiation
+
+
