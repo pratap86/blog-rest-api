@@ -2,6 +2,7 @@ package com.pratap.blog.controller;
 
 import com.pratap.blog.entity.Role;
 import com.pratap.blog.entity.User;
+import com.pratap.blog.exception.ResourceNotFoundException;
 import com.pratap.blog.model.JWTAuthResponse;
 import com.pratap.blog.model.SignInRequestModel;
 import com.pratap.blog.model.SignUpRequestModel;
@@ -81,13 +82,15 @@ public class AuthController {
 
         User user = modelMapper.map(signUpRequestModel, User.class);
         if (signUpRequestModel.getRole().equalsIgnoreCase("admin")) {
-            Optional<Role> optionalRole = roleRepository.findByName("ROLE_ADMIN");
-            optionalRole.ifPresent(role -> user.setRoles(Collections.singleton(role)));
+            Role role = roleRepository.findByName("ROLE_ADMIN")
+                    .orElseThrow(() -> new ResourceNotFoundException("First create the entry in Role(ADMIN/USER) in DB"));
+            user.setRoles(Collections.singleton(role));
         }
 
         if (signUpRequestModel.getRole().equalsIgnoreCase("user")) {
-            Optional<Role> optionalRole = roleRepository.findByName("ROLE_USER");
-            optionalRole.ifPresent(role -> user.setRoles(Collections.singleton(role)));
+            Role role = roleRepository.findByName("ROLE_USER")
+                    .orElseThrow(() -> new ResourceNotFoundException("First create the entry in Role(ADMIN/USER) in DB"));
+            user.setRoles(Collections.singleton(role));
         }
         userRepository.save(user);
         return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
