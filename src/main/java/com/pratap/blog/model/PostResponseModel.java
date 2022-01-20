@@ -2,6 +2,8 @@ package com.pratap.blog.model;
 
 import lombok.Data;
 
+import java.util.Set;
+
 @Data
 public class PostResponseModel {
 
@@ -9,4 +11,5 @@ public class PostResponseModel {
     private String title;
     private String description;
     private String content;
+    private Set<CommentResponseModel> comments;
 }
