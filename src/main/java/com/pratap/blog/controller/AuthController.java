@@ -3,9 +3,9 @@ package com.pratap.blog.controller;
 import com.pratap.blog.entity.Role;
 import com.pratap.blog.entity.User;
 import com.pratap.blog.exception.ResourceNotFoundException;
-import com.pratap.blog.model.JWTAuthResponse;
-import com.pratap.blog.model.SignInRequestModel;
-import com.pratap.blog.model.SignUpRequestModel;
+import com.pratap.blog.model.response.JWTAuthResponse;
+import com.pratap.blog.model.request.SignInRequestModel;
+import com.pratap.blog.model.request.SignUpRequestModel;
 import com.pratap.blog.repository.RoleRepository;
 import com.pratap.blog.repository.UserRepository;
 import com.pratap.blog.security.JwtTokenProvider;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.Collections;
-import java.util.Optional;
 
 @Slf4j
 @RestController

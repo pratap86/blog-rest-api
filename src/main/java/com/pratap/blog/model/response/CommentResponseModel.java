@@ -1,4 +1,4 @@
-package com.pratap.blog.model;
+package com.pratap.blog.model.response;
 
 import lombok.Data;
 
