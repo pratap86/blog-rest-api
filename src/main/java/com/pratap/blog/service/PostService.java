@@ -1,7 +1,7 @@
 package com.pratap.blog.service;
 
 import com.pratap.blog.dto.PostDto;
-import com.pratap.blog.model.PostPageableResponseModel;
+import com.pratap.blog.model.response.PostPageableResponseModel;
 
 public interface PostService {
 

@@ -1,8 +1,8 @@
 package com.pratap.blog.controller;
 
 import com.pratap.blog.dto.CommentDto;
-import com.pratap.blog.model.CommentRequestModel;
-import com.pratap.blog.model.CommentResponseModel;
+import com.pratap.blog.model.request.CommentRequestModel;
+import com.pratap.blog.model.response.CommentResponseModel;
 import com.pratap.blog.service.CommentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
