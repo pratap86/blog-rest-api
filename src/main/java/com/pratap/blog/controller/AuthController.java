@@ -9,6 +9,8 @@ import com.pratap.blog.model.request.SignUpRequestModel;
 import com.pratap.blog.repository.RoleRepository;
 import com.pratap.blog.repository.UserRepository;
 import com.pratap.blog.security.JwtTokenProvider;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.Collections;
 
+@Api(value = "Auth controller exposes sign-in and sign-up REST APIs")
 @Slf4j
 @RestController
 @RequestMapping("/blog-api/auth")
@@ -50,6 +53,7 @@ public class AuthController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    @ApiOperation(value = "REST API to Signin or Login user to Blog app")
     @PostMapping("/sign-in")
     public ResponseEntity<JWTAuthResponse> authenticateUser(@Valid @RequestBody SignInRequestModel signInRequestModel){
 
@@ -64,6 +68,7 @@ public class AuthController {
         return new ResponseEntity<>(new JWTAuthResponse(jwtToken), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "REST API to Register or Signup user to Blog app")
     @PostMapping("/sign-up")
     public ResponseEntity<String> registerUser(@Valid @RequestBody SignUpRequestModel signUpRequestModel){
 

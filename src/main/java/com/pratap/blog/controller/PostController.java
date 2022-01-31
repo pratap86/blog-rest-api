@@ -7,6 +7,8 @@ import com.pratap.blog.model.response.PostPageableResponseModel;
 import com.pratap.blog.model.request.PostRequestModel;
 import com.pratap.blog.model.response.PostResponseModel;
 import com.pratap.blog.service.PostService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+@Api(value = "CRUD Rest APIs for Post Resources")
 @RestController
 @Slf4j
 @RequestMapping("/blog-api")
@@ -39,6 +42,7 @@ public class PostController {
     @Autowired
     private ObjectMapper jsonMapper;
 
+    @ApiOperation(value = "Create Post REST API")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/posts")
     public ResponseEntity<PostResponseModel> createPost(@Valid @RequestBody PostRequestModel postRequestModel) throws Exception {
@@ -49,6 +53,7 @@ public class PostController {
         return new ResponseEntity<>(modelMapper.map(savedPostDto, PostResponseModel.class), HttpStatus.CREATED);
     }
 
+    @ApiOperation(value = "Get All Posts REST API")
     @GetMapping("/posts")
     public ResponseEntity<PostPageableResponseModel> getAllPost(@RequestParam(value = "pageNo", defaultValue = AppConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
                                                                 @RequestParam(value = "pageSize", defaultValue = AppConstant.DEFAULT_PAGE_SIZE, required = false) int pageSize,
@@ -59,6 +64,7 @@ public class PostController {
         return new ResponseEntity<>(postService.getPosts(pageNo, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Get Post By Id REST API")
     @GetMapping("/posts/{postId}")
     public ResponseEntity<PostResponseModel> getPostByPostId(@PathVariable("postId") String postId) throws Exception {
         log.info("Executing getPostById() by id={}", postId);
@@ -66,6 +72,7 @@ public class PostController {
         return new ResponseEntity<>(modelMapper.map(postDto, PostResponseModel.class), HttpStatus.FOUND);
     }
 
+    @ApiOperation(value = "Update Post By Id REST API")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/posts/{postId}")
     public ResponseEntity<PostResponseModel> updatePostByPostId(@RequestBody PostRequestModel postRequestModel, @PathVariable("postId") String postId) throws Exception {
@@ -76,6 +83,7 @@ public class PostController {
         return new ResponseEntity<>(modelMapper.map(postDto, PostResponseModel.class), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Delete Post By Id REST API")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/posts/{postId}")
     public ResponseEntity<String> deletePostByPostId(@PathVariable("postId") String postId) throws Exception {
